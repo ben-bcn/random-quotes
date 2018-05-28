@@ -1,84 +1,88 @@
-// create array of quotes include quote, source, citation and date
-// last two are optional
-
-var quotes = [
-  {
-    quote: "When you arise in the morning, think of what a precious privilege it is to be alive - to breathe, to think, to enjoy, to love.",
-    source: "Marcus Aurelius",
-    citation: "",
-    date:"",
-    category:"Real"
-  },
-  {
-    quote: "I think we build resilience to prepare for whatever adversity we'll face. And we all face some adversity - we're all living some form of Option B.",
-    source: "Sheryl Sandberg",
-    citation: "",
-    date:"",
-    category:"Real"
-  },
-  {
-    quote: "Be yourself; everyone else is already taken.",
-    source: "Oscar Wilde",
-    citation: "",
-    date:"",
-    category:"Real"
-  },
-  {
-    quote: "Quotes with citations are hard to find!",
-    source: "Ben",
-    citation: "TreeHouse Projects Search",
-    date:"May 26, 2018",
-    category:"Real"
-  },
-  {
-    quote: "I am not a duck!",
-    source: "Duck",
-    citation: "The Duck Spring",
-    date:"June 2, 1818",
-    category:"Fake"
-  }
-
+// array of colors
+var colors  = [
+  "8016b7",
+  "de0a0f",
+  "4e55e6",
+  "de880d",
+  "2f8829"
 ];
 
-function getRandomQuote (){
-  // generate a random number between 0 and 4
-  var generateNum = Math.floor(Math.random() * 5);
 
+function getRandomNum(upperLimit){
+  // generates a random number utilizing an upper limit param
+  return Math.floor(Math.random() * upperLimit);
+}
+
+function getRandomQuote (){
+  // using .length will ensure the function works if quotes are added or removed
+  var generateNum = getRandomNum(quotes.length);
+
+  // initiate the quoteContent object literal
   var quoteContent = {};
+
   // create the content variables to receive the values
-  quoteContent.quote(quotes[generateNum].quote);
-  quoteContent.source(quotes[generateNum].source);
+  quoteContent.quote    = quotes[generateNum].quote;
+  quoteContent.source   = quotes[generateNum].source;
+  quoteContent.category = quotes[generateNum].category;
 
   // check to see if there is a citation
   if(quotes[generateNum].citation.length > 0){
-    quoteContent.citation(quotes[generateNum].citation);
+    quoteContent.citation = quotes[generateNum].citation;
   }
 
   // check to see if there is a date
   if(quotes[generateNum].date.length > 0){
-    quoteContent.date(quotes[generateNum].date);
+    quoteContent.date = quotes[generateNum].date;
   }
 
-
-  quoteContent.category(quotes[generateNum].category);
-
-  // concat the variables into one string.
+  // return the object literal.
   return quoteContent;
+
+}
+
+function randomColor(){
+  // generate a random number between 0 and 4
+  // using .length will ensure the function works if quotes are added or removed
+  var generateNum = getRandomNum(colors.length);
+
+  // return a HEX value from the colors array
+  return colors[generateNum];
 
 }
 
 function printQuote(){
 
-  // get a random quote
-  var theQuote  = getRandomQuote ();
+  // get a random quote(s)
+  var theQuote  = getRandomQuote();
 
+  // Add the quote data to the HTML strings
   var html  = '<p class="quote"> ' + theQuote.quote + ' </p>';
-  html  += '<p class="source"> [source here]';
-  html  += '<span class="citation"> [citation here] </span>';
-  html  += '<span class="year"> [year here] </span>';
-  html  += '</p>';
+  html      += '<p class="source"> ' + theQuote.source ;
+
+  // Only add citation HTML if citation is present
+  if(theQuote.citation){
+    html    += '<span class="citation"> ' + theQuote.citation + ' </span>';
+  }
+
+  // Only add date HTML if date is present
+  if(theQuote.date){
+    html    += '<span class="year"> ' + theQuote.date + '  </span>';
+  }
+
+  html      += '<br><span class="category">Category: ' + theQuote.category+ ' </span>';
+  html      += '</p>';
+
+  // print HTML to the page in the 'quote-box' DIV
+  document.getElementById('quote-box').innerHTML = html;
+
+  // change the BODY background color
+  document.body.style.backgroundColor = "#" + randomColor();
+
 }
 
 // event listener to respond to "Show another quote" button clicks
 // when user clicks anywhere on the button, the "printQuote" function is called
 document.getElementById('loadQuote').addEventListener("click", printQuote, false);
+
+// automatically change the background color every 30 seconds
+setInterval(function(){ printQuote(); }, 15000);
